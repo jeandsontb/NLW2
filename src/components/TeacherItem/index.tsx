@@ -1,35 +1,58 @@
 import React from 'react';
 import whatsappIcon from '../../assets/images/icons/whatsapp.svg';
+import api from '../../services/api';
 
 import './styles.css';
 
-const TeacherItem = () => {
+
+export interface Teacher {
+    id: number;
+    avatar: string;
+    bio: string;
+    cost: number;
+    name: string;
+    subject: string;
+    whatsapp: string;
+}
+
+interface TeacherItemsProps {
+    teacher: Teacher;
+}
+
+const TeacherItem: React.FC<TeacherItemsProps>  = ({ teacher }) => {
+
+    const createNewConnection = () => {
+        api.post('connections', {
+            user_id: teacher.id,
+        });
+    }
+
     return (
         <article className="teacher-item">
             <header>
-                <img src="https://scontent-for1-1.xx.fbcdn.net/v/t31.0-0/p180x540/27908062_335156586975662_7849652321345981327_o.jpg?_nc_cat=111&_nc_sid=e3f864&_nc_ohc=mRA5wAk4kNAAX_kXUkG&_nc_ht=scontent-for1-1.xx&_nc_tp=6&oh=42beea5628721773e91eaef7d390d52e&oe=5F4D9704" alt="Avatar"/>
+                <img src={teacher.avatar} alt={teacher.name}/>
                 <div>
-                    <strong>Jeandson Tenorio</strong>
-                    <span>Informática</span>
+                    <strong>{teacher.name}</strong>
+                    <span>{teacher.subject}</span>
                 </div>
             </header>
             <p>
-            Entusiasta por tecnologias avançadas.
-            <br/><br/>
-            Apaixonado por teconolgias de uso multiplataforma, com muitas opções de código
-            para quebrar realmente a cabeça do indivíduo quando achar que as coisas são
-            fáceis de serem realizadas.
+                {teacher.bio}
             </p>
 
             <footer>
                 <p>
                     Preço/hora
-                    <strong>R$ 20,00</strong>
+                    <strong>R$ {teacher.cost}</strong>
                 </p>
-                <button type="button" >
+                <a 
+                    target="_blank" 
+                    onClick={createNewConnection} 
+                    href={`https://wa.me/${teacher.whatsapp}`} 
+                >
                     <img src={whatsappIcon} alt="Whatsapp"/>
                     Entrar em contato
-                </button>
+                </a>
             </footer>
         </article>
     );
